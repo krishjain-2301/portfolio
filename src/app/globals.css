@@ -1,0 +1,146 @@
+@import "tailwindcss";
+
+@theme {
+  --color-background: #000000;
+  --color-surface: rgba(0, 20, 0, 0.35);
+  --color-surface-elevated: rgba(0, 30, 0, 0.25);
+  --color-border: rgba(0, 255, 65, 0.12);
+  --color-muted: rgba(0, 255, 65, 0.45);
+  --color-foreground: rgba(220, 255, 220, 0.92);
+  --color-accent: #00ff41;
+  --color-accent-dim: #00cc33;
+  --font-sans: var(--font-space-grotesk), ui-sans-serif, system-ui, sans-serif;
+  --font-mono: var(--font-jetbrains-mono), ui-monospace, monospace;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background: var(--color-background);
+  color: var(--color-foreground);
+  font-family: var(--font-sans);
+  overflow-x: hidden;
+}
+
+::selection {
+  background: rgba(0, 255, 65, 0.2);
+  color: #fff;
+}
+
+::-webkit-scrollbar {
+  width: 4px;
+}
+
+::-webkit-scrollbar-track {
+  background: #000;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(0, 255, 65, 0.2);
+  border-radius: 2px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(0, 255, 65, 0.35);
+}
+
+.scanline::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: repeating-linear-gradient(
+    0deg,
+    transparent,
+    transparent 2px,
+    rgba(0, 255, 65, 0.008) 2px,
+    rgba(0, 255, 65, 0.008) 4px
+  );
+  pointer-events: none;
+  z-index: 1;
+}
+
+.vignette::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(
+    ellipse at center,
+    transparent 30%,
+    rgba(0, 0, 0, 0.75) 100%
+  );
+  pointer-events: none;
+  z-index: 2;
+}
+
+.glow-text {
+  text-shadow:
+    0 0 24px rgba(0, 255, 65, 0.35),
+    0 0 48px rgba(0, 255, 65, 0.12);
+}
+
+.gradient-text {
+  background: linear-gradient(180deg, #ffffff 0%, var(--color-accent) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.matrix-card {
+  border: 1px solid rgba(0, 255, 65, 0.1);
+  border-radius: 0.75rem;
+  background: rgba(0, 10, 0, 0.4);
+  backdrop-filter: blur(8px);
+}
+
+.glow-border {
+  box-shadow:
+    0 0 0 1px rgba(0, 255, 65, 0.06),
+    0 0 40px rgba(0, 255, 65, 0.03);
+}
+
+.card-hover {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.card-hover:hover {
+  transform: translateY(-3px);
+  border-color: rgba(0, 255, 65, 0.22);
+  box-shadow:
+    0 0 0 1px rgba(0, 255, 65, 0.1),
+    0 12px 32px rgba(0, 0, 0, 0.5),
+    0 0 40px rgba(0, 255, 65, 0.04);
+}
+
+@keyframes blink {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0;
+  }
+}
+
+.cursor-blink {
+  animation: blink 1s step-end infinite;
+}
+
+@keyframes float {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-8px);
+  }
+}
+
+.animate-float {
+  animation: float 6s ease-in-out infinite;
+}
