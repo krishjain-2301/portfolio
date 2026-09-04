@@ -19,6 +19,19 @@ type ContributionsApiResponse = {
   contributions?: ContributionDay[];
 };
 
+type GraphQLCalendarDay = {
+  date: string;
+  contributionCount: number;
+};
+
+function getLevel(count: number): 0 | 1 | 2 | 3 | 4 {
+  if (count === 0) return 0;
+  if (count <= 3) return 1;
+  if (count <= 6) return 2;
+  if (count <= 9) return 3;
+  return 4;
+}
+
 function toDateKey(date: Date) {
   return date.toISOString().slice(0, 10);
 }
@@ -62,19 +75,16 @@ function computeStreaks(contributions: ContributionDay[]) {
   return { maxStreak, currentStreak };
 }
 
-export async function fetchGitHubStats(
-  username: string
-): Promise<GitHubStats> {
+async function fetchPullRequestAndIssueCounts(username: string) {
   const headers = {
     Accept: "application/vnd.github+json",
     "User-Agent": "krish-jain-portfolio",
+    ...(process.env.GITHUB_TOKEN
+      ? { Authorization: `Bearer ${process.env.GITHUB_TOKEN}` }
+      : {}),
   };
 
-  const [contributionsRes, pullRequestsRes, issuesRes] = await Promise.all([
-    fetch(
-      `https://github-contributions-api.jogruber.de/v4/${username}?y=last`,
-      { next: { revalidate: 3600 } }
-    ),
+  const [pullRequestsRes, issuesRes] = await Promise.all([
     fetch(
       `https://api.github.com/search/issues?q=author:${username}+type:pr&per_page=1`,
       { headers, next: { revalidate: 3600 } }
@@ -85,31 +95,125 @@ export async function fetchGitHubStats(
     ),
   ]);
 
-  if (!contributionsRes.ok) {
-    throw new Error("Failed to fetch GitHub contributions");
-  }
+  return {
+    totalPullRequests: pullRequestsRes.ok
+      ? ((await pullRequestsRes.json()) as { total_count: number }).total_count
+      : 0,
+    totalIssues: issuesRes.ok
+      ? ((await issuesRes.json()) as { total_count: number }).total_count
+      : 0,
+  };
+}
 
-  const payload = (await contributionsRes.json()) as ContributionsApiResponse;
-  const contributions = payload.contributions ?? [];
-  const totalContributions =
-    payload.total?.lastYear ??
-    contributions.reduce((sum, day) => sum + day.count, 0);
-  const { maxStreak, currentStreak } = computeStreaks(contributions);
+async function fetchFromGitHubGraphQL(
+  username: string
+): Promise<Pick<GitHubStats, "contributions" | "totalContributions"> | null> {
+  const token = process.env.GITHUB_TOKEN;
+  if (!token) return null;
 
-  const pullRequests = pullRequestsRes.ok
-    ? ((await pullRequestsRes.json()) as { total_count: number }).total_count
-    : 0;
-  const issues = issuesRes.ok
-    ? ((await issuesRes.json()) as { total_count: number }).total_count
-    : 0;
+  const query = `
+    query($username: String!) {
+      user(login: $username) {
+        contributionsCollection {
+          contributionCalendar {
+            totalContributions
+            weeks {
+              contributionDays {
+                date
+                contributionCount
+              }
+            }
+          }
+        }
+      }
+    }
+  `;
+
+  const res = await fetch("https://api.github.com/graphql", {
+    method: "POST",
+    headers: {
+      Authorization: `Bearer ${token}`,
+      "Content-Type": "application/json",
+      "User-Agent": "krish-jain-portfolio",
+    },
+    body: JSON.stringify({ query, variables: { username } }),
+    next: { revalidate: 3600 },
+  });
+
+  if (!res.ok) return null;
+
+  const payload = (await res.json()) as {
+    errors?: unknown[];
+    data?: {
+      user?: {
+        contributionsCollection?: {
+          contributionCalendar?: {
+            totalContributions: number;
+            weeks: Array<{ contributionDays: GraphQLCalendarDay[] }>;
+          };
+        };
+      };
+    };
+  };
+
+  if (payload.errors?.length) return null;
+
+  const calendar = payload.data?.user?.contributionsCollection?.contributionCalendar;
+  if (!calendar) return null;
+
+  const contributions = calendar.weeks.flatMap((week) =>
+    week.contributionDays.map((day) => ({
+      date: day.date,
+      count: day.contributionCount,
+      level: getLevel(day.contributionCount),
+    }))
+  );
 
   return {
     contributions,
-    totalContributions,
+    totalContributions: calendar.totalContributions,
+  };
+}
+
+async function fetchFromContributionsApi(username: string) {
+  const res = await fetch(
+    `https://github-contributions-api.jogruber.de/v4/${username}?y=last`,
+    { next: { revalidate: 3600 } }
+  );
+
+  if (!res.ok) {
+    throw new Error("Failed to fetch GitHub contributions");
+  }
+
+  const payload = (await res.json()) as ContributionsApiResponse;
+  const contributions = payload.contributions ?? [];
+
+  return {
+    contributions,
+    totalContributions: contributions.reduce((sum, day) => sum + day.count, 0),
+  };
+}
+
+export async function fetchGitHubStats(
+  username: string
+): Promise<GitHubStats> {
+  const graphData = await fetchFromGitHubGraphQL(username);
+  const contributionData =
+    graphData ?? (await fetchFromContributionsApi(username));
+
+  const { maxStreak, currentStreak } = computeStreaks(
+    contributionData.contributions
+  );
+  const { totalPullRequests, totalIssues } =
+    await fetchPullRequestAndIssueCounts(username);
+
+  return {
+    contributions: contributionData.contributions,
+    totalContributions: contributionData.totalContributions,
     maxStreak,
     currentStreak,
-    totalPullRequests: pullRequests,
-    totalIssues: issues,
+    totalPullRequests,
+    totalIssues,
     username,
   };
 }

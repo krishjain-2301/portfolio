@@ -70,16 +70,9 @@ export function GitHubActivity() {
           className="matrix-card glow-border overflow-hidden p-6 sm:p-8"
         >
           <div className="mb-6 flex flex-wrap items-center justify-between gap-4">
-            <div>
-              <p className="font-mono text-xs tracking-widest text-label uppercase">
-                @{siteConfig.githubUsername}
-              </p>
-              <p className="mt-1 text-sm text-secondary">
-                {loading
-                  ? "Syncing contributions..."
-                  : `${stats?.totalContributions.toLocaleString() ?? "—"} contributions in the last year`}
-              </p>
-            </div>
+            <p className="font-mono text-xs tracking-widest text-label uppercase">
+              @{siteConfig.githubUsername}
+            </p>
             <a
               href={siteConfig.github}
               target="_blank"

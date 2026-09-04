@@ -165,7 +165,3 @@ body {
 .react-activity-calendar text {
   fill: rgba(180, 255, 200, 0.85) !important;
 }
-
-.react-activity-calendar svg rect {
-  rx: 2;
-}
