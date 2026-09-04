@@ -5,6 +5,20 @@ import { Github, Linkedin, Mail, Send } from "lucide-react";
 import { siteConfig } from "@/lib/data";
 import { SectionHeader } from "./SectionHeader";
 
+function XIcon({ size = 24 }: { size?: number }) {
+  return (
+    <svg
+      width={size}
+      height={size}
+      viewBox="0 0 24 24"
+      fill="currentColor"
+      aria-hidden="true"
+    >
+      <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" />
+    </svg>
+  );
+}
+
 const socialLinks = [
   {
     label: "Email",
@@ -16,13 +30,19 @@ const socialLinks = [
     label: "GitHub",
     href: siteConfig.github,
     icon: Github,
-    value: "krishjain-2301",
+    value: siteConfig.githubUsername,
   },
   {
     label: "LinkedIn",
     href: siteConfig.linkedin,
     icon: Linkedin,
     value: "kriishjaiin",
+  },
+  {
+    label: "X",
+    href: siteConfig.twitter,
+    icon: XIcon,
+    value: "krishvain",
   },
 ];
 
@@ -31,7 +51,7 @@ export function Contact() {
     <section id="contact" className="relative px-6 py-24">
       <div className="mx-auto max-w-6xl">
         <SectionHeader
-          number="06."
+          number="08."
           title="Get In Touch"
           subtitle="Open to AI Red Teaming roles, security research, and collaboration."
         />
@@ -55,7 +75,7 @@ export function Contact() {
               security project — I&apos;d love to hear from you.
             </p>
 
-            <div className="mb-10 grid gap-4 sm:grid-cols-3">
+            <div className="mb-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
               {socialLinks.map((link, index) => (
                 <motion.a
                   key={link.label}

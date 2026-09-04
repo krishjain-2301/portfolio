@@ -6,7 +6,9 @@ export const siteConfig = {
   email: "jainkrish232006@gmail.com",
   phone: "8143707807",
   github: "https://github.com/krishjain-2301",
+  githubUsername: "krishjain-2301",
   linkedin: "https://www.linkedin.com/in/kriishjaiin/",
+  twitter: "https://x.com/krishvain",
   about:
     "Cybersecurity student at VIT Chennai with a focus on AI Red Teaming and LLM security. I build tools that stress-test AI systems, hunt vulnerabilities in web applications, and compete in CTFs. My goal is to bridge offensive security with the emerging frontier of AI safety.",
   education: {
@@ -30,26 +32,55 @@ export const siteConfig = {
   ],
   skills: [
     {
-      category: "Languages",
-      items: ["Python", "C++", "Java", "JavaScript", "SQL", "C", "HTML", "CSS", "Bash"],
-    },
-    {
-      category: "Cybersecurity",
+      category: "AI & LLM Security",
       items: [
-        "Web Security",
-        "OWASP Top 10",
-        "API Security",
-        "VAPT",
-        "AI Security",
+        "Prompt Injection",
+        "Jailbreak Testing",
+        "Adversarial Testing",
         "LLM Red Teaming",
-        "Secure Coding",
+        "Agent Misuse",
+        "Sensitive Data Disclosure",
+        "RAG Poisoning",
+        "Model DoS",
       ],
     },
     {
-      category: "Tools",
+      category: "OWASP Frameworks",
+      items: [
+        "OWASP LLM Top 10",
+        "OWASP Web Top 10",
+        "OWASP API Security Top 10",
+        "Secure SDLC",
+        "Threat Modeling",
+      ],
+    },
+    {
+      category: "Web & App Security",
+      items: [
+        "VAPT",
+        "API Security",
+        "XSS",
+        "SQL Injection",
+        "SSRF",
+        "Auth Bypass",
+        "Business Logic Flaws",
+        "Recon & Enumeration",
+      ],
+    },
+    {
+      category: "AI Security Tools",
       items: [
         "Promptfoo",
         "Garak",
+        "PyRIT",
+        "Ollama",
+        "LLM-as-Judge",
+        "Adversarial Prompt Libraries",
+      ],
+    },
+    {
+      category: "Industry Security Tools",
+      items: [
         "Burp Suite",
         "Nmap",
         "Wireshark",
@@ -57,31 +88,47 @@ export const siteConfig = {
         "Dalfox",
         "Subfinder",
         "httpx",
+        "Kali Linux",
       ],
     },
     {
-      category: "AI Security",
-      items: [
-        "Prompt Injection",
-        "Jailbreak Testing",
-        "Adversarial Testing",
-      ],
-    },
-    {
-      category: "Development",
-      items: [
-        "FastAPI",
-        "Flask",
-        "Next.js",
-        "React",
-        "Node.js",
-        "SQLite",
-        "Supabase",
-        "Drizzle ORM",
-        "Git",
-      ],
+      category: "Languages",
+      items: ["Python", "C++", "Java", "JavaScript", "SQL", "Bash"],
     },
   ],
+  tryHackMe: {
+    username: "krishvain",
+    userId: "67110b9a01dd61c9da804d6c",
+    profileUrl: "https://tryhackme.com/p/krishvain",
+    title: "[0x8][HACKER]",
+    rank: "Top 15%",
+    level: "43",
+    badges: 4,
+    streak: 7,
+    completedRooms: 36,
+    recentRooms: [
+      {
+        name: "DNS in Detail",
+        difficulty: "Easy",
+        description: "How DNS works and how it helps access internet services.",
+      },
+      {
+        name: "Offensive Security Intro",
+        difficulty: "Easy",
+        description: "Hack your first website in a safe, contained environment.",
+      },
+      {
+        name: "TakeOver",
+        difficulty: "Easy",
+        description: "Subdomain enumeration and takeover challenges.",
+      },
+      {
+        name: "Defensive Security Intro",
+        difficulty: "Easy",
+        description: "Threat intel, SOC, DFIR, malware analysis, and SIEM.",
+      },
+    ],
+  },
   projects: [
     {
       title: "AYZO",
@@ -121,7 +168,7 @@ export const siteConfig = {
         "Automated probing pattern analysis",
       ],
       github: "https://github.com/krishjain-2301/honeypot",
-      featured: false,
+      featured: true,
     },
   ],
   achievements: [
@@ -158,6 +205,7 @@ export const siteConfig = {
   navLinks: [
     { label: "About", href: "#about" },
     { label: "Skills", href: "#skills" },
+    { label: "Activity", href: "#activity" },
     { label: "Projects", href: "#projects" },
     { label: "Experience", href: "#experience" },
     { label: "Contact", href: "#contact" },

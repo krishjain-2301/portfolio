@@ -26,15 +26,7 @@ export function Navbar() {
           : "bg-transparent"
       }`}
     >
-      <nav className="mx-auto flex max-w-6xl items-center justify-between px-6 py-4">
-        <a href="#" className="group flex items-center gap-2">
-          <span className="font-mono text-sm text-accent/70">&lt;</span>
-          <span className="font-mono text-sm font-semibold tracking-wider text-foreground/90">
-            KJ
-          </span>
-          <span className="font-mono text-sm text-accent/70">/&gt;</span>
-        </a>
-
+      <nav className="relative mx-auto flex max-w-6xl items-center justify-center px-6 py-4">
         <ul className="hidden items-center gap-8 md:flex">
           {siteConfig.navLinks.map((link, i) => (
             <motion.li
@@ -45,7 +37,7 @@ export function Navbar() {
             >
               <a
                 href={link.href}
-                className="font-mono text-xs tracking-widest text-muted uppercase transition-colors hover:text-accent"
+                className="font-mono text-xs tracking-widest text-label uppercase transition-colors hover:text-accent-bright"
               >
                 {link.label}
               </a>
@@ -55,7 +47,7 @@ export function Navbar() {
 
         <button
           type="button"
-          className="text-foreground/80 md:hidden"
+          className="absolute right-6 text-foreground md:hidden"
           onClick={() => setMobileOpen(!mobileOpen)}
           aria-label="Toggle menu"
         >
@@ -70,13 +62,13 @@ export function Navbar() {
           exit={{ opacity: 0, height: 0 }}
           className="border-b border-accent/10 bg-black/90 backdrop-blur-xl md:hidden"
         >
-          <ul className="flex flex-col gap-4 px-6 py-6">
+          <ul className="flex flex-col items-center gap-4 px-6 py-6">
             {siteConfig.navLinks.map((link) => (
               <li key={link.href}>
                 <a
                   href={link.href}
                   onClick={() => setMobileOpen(false)}
-                  className="font-mono text-sm tracking-widest text-muted uppercase transition-colors hover:text-accent"
+                  className="font-mono text-sm tracking-widest text-label uppercase transition-colors hover:text-accent-bright"
                 >
                   {link.label}
                 </a>

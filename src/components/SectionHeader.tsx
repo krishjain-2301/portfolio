@@ -19,12 +19,12 @@ export function SectionHeader({
       transition={{ duration: 0.6 }}
       className="mb-12"
     >
-      <span className="font-mono text-sm text-accent/60">{number}</span>
-      <h2 className="mt-2 text-3xl font-bold tracking-tight text-foreground/90 sm:text-4xl">
+      <span className="font-mono text-sm text-label">{number}</span>
+      <h2 className="mt-2 text-3xl font-bold tracking-tight text-foreground sm:text-4xl">
         {title}
       </h2>
       {subtitle && (
-        <p className="mt-2 max-w-xl text-muted">{subtitle}</p>
+        <p className="mt-2 max-w-xl text-secondary">{subtitle}</p>
       )}
     </motion.div>
   );

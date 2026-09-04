@@ -6,8 +6,11 @@
   --color-surface-elevated: rgba(0, 30, 0, 0.25);
   --color-border: rgba(0, 255, 65, 0.12);
   --color-muted: rgba(0, 255, 65, 0.45);
-  --color-foreground: rgba(220, 255, 220, 0.92);
+  --color-label: rgba(200, 240, 200, 0.75);
+  --color-secondary: rgba(170, 210, 170, 0.85);
+  --color-foreground: rgba(240, 255, 240, 0.95);
   --color-accent: #00ff41;
+  --color-accent-bright: #5dff8a;
   --color-accent-dim: #00cc33;
   --font-sans: var(--font-space-grotesk), ui-sans-serif, system-ui, sans-serif;
   --font-mono: var(--font-jetbrains-mono), ui-monospace, monospace;
@@ -143,4 +146,26 @@ body {
 
 .animate-float {
   animation: float 6s ease-in-out infinite;
+}
+
+/* GitHub activity calendar — matrix theme */
+.github-calendar-full .react-activity-calendar {
+  width: 100%;
+}
+
+.github-calendar-full .react-activity-calendar > div {
+  width: 100%;
+}
+
+.github-calendar-full .react-activity-calendar svg {
+  width: 100%;
+  max-width: 100%;
+}
+
+.react-activity-calendar text {
+  fill: rgba(180, 255, 200, 0.85) !important;
+}
+
+.react-activity-calendar svg rect {
+  rx: 2;
 }
