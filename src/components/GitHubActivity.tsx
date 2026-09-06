@@ -1,28 +1,56 @@
 "use client";
 
-import "react-activity-calendar/tooltips.css";
+import "github-contrib-graph/styles.css";
+import { GitHubContributionGraph } from "github-contrib-graph/react";
 import { motion } from "framer-motion";
-import { ActivityCalendar } from "react-activity-calendar";
 import { ExternalLink } from "lucide-react";
-import { useEffect, useRef, useState } from "react";
-import type { GitHubStats } from "@/lib/github";
+import { useEffect, useRef } from "react";
 import { siteConfig } from "@/lib/data";
 import { SectionHeader } from "./SectionHeader";
 
-function useCalendarBlockSize(containerRef: React.RefObject<HTMLDivElement | null>) {
-  const [blockSize, setBlockSize] = useState(13);
+const matrixTheme = {
+  bgColor: "transparent",
+  textColor: "rgba(180, 255, 200, 0.85)",
+  inactiveTextColor: "rgba(0, 255, 65, 0.45)",
+  linkHoverColor: "#5dff8a",
+  cellLevel0: "#0a0a0a",
+  cellLevel1: "#0f2e16",
+  cellLevel2: "#145a22",
+  cellLevel3: "#1a8630",
+  cellLevel4: "#00ff41",
+  cellBorderColor: "rgba(0, 255, 65, 0.1)",
+  cellOutlineColor: "transparent",
+  borderColor: "rgba(0, 255, 65, 0.12)",
+  borderWidth: 0,
+  cardPadding: 0,
+  cardPaddingBlock: 0,
+  cardRadius: 0,
+  canvasPaddingTop: 0,
+  canvasMarginInline: 0,
+  cellGap: 3,
+  cellRadius: 2,
+  footerPadding: "12px 0 0",
+  footerFontSize: 11,
+  fontFamily: "var(--font-jetbrains-mono), ui-monospace, monospace",
+};
 
+function useResponsiveCellSize(
+  containerRef: React.RefObject<HTMLDivElement | null>
+) {
   useEffect(() => {
     const container = containerRef.current;
     if (!container) return;
 
     const update = () => {
-      const width = container.clientWidth - 24;
+      const width = container.clientWidth - 32;
       const weeks = 53;
-      const margin = 3;
-      const labelWidth = 30;
-      const size = Math.floor((width - labelWidth) / weeks - margin);
-      setBlockSize(Math.max(11, Math.min(size, 20)));
+      const labelWidth = 28;
+      const gap = 3;
+      const size = Math.floor((width - labelWidth) / weeks - gap);
+      container.style.setProperty(
+        "--gh-cell-size",
+        `${Math.max(10, Math.min(size, 16))}px`
+      );
     };
 
     update();
@@ -35,23 +63,11 @@ function useCalendarBlockSize(containerRef: React.RefObject<HTMLDivElement | nul
       window.removeEventListener("resize", update);
     };
   }, [containerRef]);
-
-  return blockSize;
 }
 
 export function GitHubActivity() {
-  const [stats, setStats] = useState<GitHubStats | null>(null);
-  const [loading, setLoading] = useState(true);
   const calendarRef = useRef<HTMLDivElement>(null);
-  const blockSize = useCalendarBlockSize(calendarRef);
-
-  useEffect(() => {
-    fetch("/api/github")
-      .then((res) => res.json())
-      .then((data: GitHubStats) => setStats(data))
-      .catch(() => setStats(null))
-      .finally(() => setLoading(false));
-  }, []);
+  useResponsiveCellSize(calendarRef);
 
   return (
     <section id="activity" className="relative px-6 py-24">
@@ -88,30 +104,34 @@ export function GitHubActivity() {
             ref={calendarRef}
             className="github-calendar-full w-full rounded-xl border border-accent/10 bg-black/40 p-4"
           >
-            {loading ? (
-              <div className="flex h-36 items-center justify-center font-mono text-sm text-secondary">
-                Loading activity graph...
-              </div>
-            ) : stats ? (
-              <ActivityCalendar
-                data={stats.contributions}
-                theme={{
-                  light: ["#0a0a0a", "#0f2e16", "#145a22", "#1a8630", "#00ff41"],
-                  dark: ["#0a0a0a", "#0f2e16", "#145a22", "#1a8630", "#00ff41"],
-                }}
-                colorScheme="dark"
-                blockSize={blockSize}
-                blockMargin={3}
-                fontSize={12}
-                showWeekdayLabels={["mon", "wed", "fri"]}
-                showTotalCount={false}
-                style={{ color: "rgba(180, 255, 200, 0.85)", width: "100%" }}
-              />
-            ) : (
-              <div className="flex h-36 items-center justify-center font-mono text-sm text-secondary">
-                Unable to load GitHub activity.
-              </div>
-            )}
+            <GitHubContributionGraph
+              username={siteConfig.githubUsername}
+              theme={matrixTheme}
+              showHeader={false}
+              showFooter={true}
+              showThumbnail={false}
+              showWeekdayLabels={true}
+              dayLabels={["", "Mon", "", "Wed", "", "Fri", ""]}
+              className="w-full"
+              classNames={{
+                root: "github-contrib-root",
+                card: "github-contrib-card",
+                canvas: "github-contrib-canvas",
+                monthLabel: "github-contrib-label",
+                dayLabel: "github-contrib-label",
+                footer: "github-contrib-footer",
+              }}
+              loadingFallback={
+                <div className="flex h-36 items-center justify-center font-mono text-sm text-secondary">
+                  Loading activity graph...
+                </div>
+              }
+              errorFallback={
+                <div className="flex h-36 items-center justify-center font-mono text-sm text-secondary">
+                  Unable to load GitHub activity.
+                </div>
+              }
+            />
           </div>
         </motion.div>
       </div>

@@ -148,20 +148,44 @@ body {
   animation: float 6s ease-in-out infinite;
 }
 
-/* GitHub activity calendar — matrix theme */
-.github-calendar-full .react-activity-calendar {
+/* GitHub contribution graph — matrix theme */
+.github-calendar-full {
+  --gh-cell-size: 12px;
+}
+
+.github-calendar-full .github-contrib-root,
+.github-calendar-full .ghContributionGraph {
   width: 100%;
 }
 
-.github-calendar-full .react-activity-calendar > div {
+.github-calendar-full .github-contrib-card,
+.github-calendar-full .ghCalendarCard {
+  width: 100%;
+  background: transparent;
+  border: 0;
+}
+
+.github-calendar-full .github-contrib-canvas,
+.github-calendar-full .ghCalendarCanvas {
   width: 100%;
 }
 
-.github-calendar-full .react-activity-calendar svg {
-  width: 100%;
-  max-width: 100%;
+.github-calendar-full .github-contrib-label,
+.github-calendar-full .ghCalendarLabel {
+  color: rgba(180, 255, 200, 0.85);
+  font-family: var(--font-jetbrains-mono), ui-monospace, monospace;
+  font-size: 11px;
 }
 
-.react-activity-calendar text {
-  fill: rgba(180, 255, 200, 0.85) !important;
+.github-calendar-full .github-contrib-footer,
+.github-calendar-full .ghCalendarCardFooter {
+  justify-content: flex-end;
+}
+
+.github-calendar-full .ghCalendarLoading {
+  color: rgba(170, 210, 170, 0.85);
+  font-family: var(--font-jetbrains-mono), ui-monospace, monospace;
+  font-size: 0.875rem;
+  text-align: center;
+  padding: 3rem 0;
 }
