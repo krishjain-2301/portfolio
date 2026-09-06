@@ -146,6 +146,20 @@ export const siteConfig = {
       featured: true,
     },
     {
+      title: "Revish",
+      subtitle: "AI Red Teaming & LLM Security Platform",
+      description:
+        "Local-first lab for authorized LLM security testing against Ollama, with OWASP-aligned attack suites, mutation campaigns, and automated scoring.",
+      tech: ["Python", "FastAPI", "Next.js", "Ollama", "Promptfoo"],
+      highlights: [
+        "Seven-strategy mutation engine with cross-model ASR benchmarking",
+        "Rule-based judge for leaks, jailbreaks, and tool-policy violations",
+        "Promptfoo CI gate with GitHub Actions regression testing",
+      ],
+      github: "https://github.com/krishjain-2301/revish",
+      featured: true,
+    },
+    {
       title: "Plethora",
       subtitle: "Cybersecurity Knowledge & Research Platform",
       description:
@@ -156,19 +170,6 @@ export const siteConfig = {
         "Local-first dashboards for cybersecurity progress tracking",
       ],
       github: "https://github.com/krishjain-2301/Kri27",
-      featured: true,
-    },
-    {
-      title: "Web Honeypot",
-      subtitle: "Attack Behaviour Analysis",
-      description:
-        "Honeypot simulating a student portal to capture and analyze attacker behaviour in the wild.",
-      tech: ["Python", "Flask", "HTML", "CSS", "JavaScript"],
-      highlights: [
-        "Credential attack and reconnaissance logging",
-        "Automated probing pattern analysis",
-      ],
-      github: "https://github.com/krishjain-2301/honeypot",
       featured: true,
     },
   ],
