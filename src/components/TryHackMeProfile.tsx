@@ -1,7 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { Award, ExternalLink, Flame, Shield, Target, Trophy } from "lucide-react";
+import { Award, ExternalLink, Flame, Shield, Trophy } from "lucide-react";
 import { useEffect, useState } from "react";
 import type { TryHackMeStats } from "@/lib/tryhackme";
 import { siteConfig } from "@/lib/data";
@@ -34,9 +34,11 @@ export function TryHackMeProfile() {
     recentRooms: fallback.recentRooms,
   };
 
+  const recentRooms =
+    profile.recentRooms.length > 0 ? profile.recentRooms : fallback.recentRooms;
+
   const statCards = [
     { label: "Rank", value: profile.rank, icon: Trophy },
-    { label: "Level", value: profile.level, icon: Target },
     { label: "Badges", value: String(profile.badges), icon: Award },
     { label: "Streak", value: String(profile.streak), icon: Flame },
   ];
@@ -80,7 +82,7 @@ export function TryHackMeProfile() {
             </a>
           </div>
 
-          <div className="mb-8 grid grid-cols-2 gap-4 sm:grid-cols-4">
+          <div className="mb-8 grid grid-cols-3 gap-4">
             {statCards.map(({ label, value, icon: Icon }) => (
               <div
                 key={label}
@@ -95,20 +97,17 @@ export function TryHackMeProfile() {
             ))}
           </div>
 
-          {(profile.recentRooms ?? []).length > 0 && (
+          {(recentRooms.length > 0) && (
             <>
-              <div className="mb-4 flex items-center justify-between">
+              <div className="mb-4">
                 <h3 className="flex items-center gap-2 font-mono text-xs tracking-widest text-label uppercase">
                   <Shield size={14} />
                   Recent Completed Rooms
                 </h3>
-                <span className="font-mono text-xs text-secondary">
-                  {profile.completedRooms} rooms completed
-                </span>
               </div>
 
               <div className="grid gap-4 sm:grid-cols-2">
-                {(profile.recentRooms ?? []).map((room) => (
+                {recentRooms.map((room) => (
                   <div
                     key={room.name}
                     className="matrix-card flex h-full flex-col p-4"

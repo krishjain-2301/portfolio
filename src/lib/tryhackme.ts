@@ -62,15 +62,21 @@ function pickString(...values: unknown[]): string {
   return "";
 }
 
-function pickNumber(...values: unknown[]): number {
+function pickPositiveNumber(...values: unknown[]): number | null {
   for (const value of values) {
-    if (typeof value === "number" && !Number.isNaN(value)) return value;
+    if (typeof value === "number" && !Number.isNaN(value) && value > 0) {
+      return value;
+    }
     if (typeof value === "string") {
       const num = parseInt(value.replace(/\D/g, ""), 10);
-      if (!Number.isNaN(num)) return num;
+      if (!Number.isNaN(num) && num > 0) return num;
     }
   }
-  return 0;
+  return null;
+}
+
+function pickNumber(...values: unknown[]): number {
+  return pickPositiveNumber(...values) ?? 0;
 }
 
 function formatRank(profile: Record<string, unknown>): string {
@@ -240,21 +246,21 @@ export async function fetchTryHackMeStats(
       : fallback.recentRooms;
 
   const streak =
-    badgeProfile.streak ||
-    profileParsed.streak ||
-    parseStreak(countData) ||
-    fallback.streak;
+    pickPositiveNumber(
+      badgeProfile.streak,
+      profileParsed.streak,
+      parseStreak(countData)
+    ) ?? fallback.streak;
 
   const completedRooms =
-    badgeProfile.completedRooms ||
-    profileParsed.completedRooms ||
-    pickNumber(
+    pickPositiveNumber(
+      badgeProfile.completedRooms,
+      profileParsed.completedRooms,
       countData.completedRooms,
       countData.roomsCompleted,
       countData.totalCompletedRooms,
       roomsPayload.totalDocs
-    ) ||
-    fallback.completedRooms;
+    ) ?? fallback.completedRooms;
 
   const synced = Boolean(
     badgeRes || profileRes || roomsRes || badgesRes || countRes
@@ -271,18 +277,15 @@ export async function fetchTryHackMeStats(
       (profileParsed.rank !== "—" ? profileParsed.rank : "") ||
       badgeProfile.rank ||
       fallback.rank,
-    level:
-      (profileParsed.level !== "—" ? profileParsed.level : "") ||
-      String(
-        pickNumber(
-          countData.points,
-          countData.userPoints,
-          countData.levelNumber,
-          countData.userLevel
-        )
-      ) ||
-      String(fallback.level),
-    badges: badges || fallback.badges,
+    level: String(
+      pickPositiveNumber(
+        profileParsed.level !== "—" ? Number(profileParsed.level) : null,
+        countData.points,
+        countData.userPoints,
+        fallback.level
+      ) ?? fallback.level
+    ),
+    badges: pickPositiveNumber(badges) ?? fallback.badges,
     streak,
     completedRooms,
     profileImage:
