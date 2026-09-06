@@ -99,13 +99,14 @@ export const siteConfig = {
   tryHackMe: {
     username: "krishvain",
     userId: "67110b9a01dd61c9da804d6c",
+    userPublicId: "5672619",
     profileUrl: "https://tryhackme.com/p/krishvain",
     title: "[0x8][HACKER]",
     rank: "Top 15%",
     level: "43",
     badges: 4,
-    streak: 7,
-    completedRooms: 36,
+    streak: 9,
+    completedRooms: 37,
     recentRooms: [
       {
         name: "DNS in Detail",
