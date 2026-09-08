@@ -104,9 +104,9 @@ export const siteConfig = {
     title: "[0x8][HACKER]",
     rank: "Top 15%",
     level: "43",
-    badges: 4,
-    streak: 9,
-    completedRooms: 37,
+    badges: 5,
+    streak: 11,
+    completedRooms: 42,
     recentRooms: [
       {
         name: "DNS in Detail",

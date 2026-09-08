@@ -18,7 +18,7 @@ export type TryHackMeStats = {
   synced?: boolean;
 };
 
-type TryHackMeFallback = {
+export type TryHackMeFallback = {
   title: string;
   rank: string;
   level: string | number;
@@ -36,14 +36,15 @@ type CompletedRoomApiItem = {
   level?: string;
 };
 
-const THM_HEADERS = {
-  Accept: "application/json",
+export const THM_HEADERS = {
+  Accept: "application/json, text/plain, */*",
+  "Accept-Language": "en-US,en;q=0.9",
   "User-Agent":
     "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
   Referer: "https://tryhackme.com/",
 };
 
-function unwrapPayload<T>(payload: T | { data?: T; status?: string }): T {
+export function unwrapPayload<T>(payload: T | { data?: T; status?: string }): T {
   if (
     payload &&
     typeof payload === "object" &&
@@ -166,30 +167,15 @@ function parseBadgePayload(
   return parseProfile(data);
 }
 
-async function fetchJson<T>(url: string): Promise<T | null> {
-  const res = await fetch(url, {
-    headers: THM_HEADERS,
-    next: { revalidate: 900 },
-  });
+type FetchJson = <T>(url: string) => Promise<T | null>;
 
-  if (!res.ok) return null;
-
-  const contentType = res.headers.get("content-type") ?? "";
-  if (!contentType.includes("application/json")) return null;
-
-  try {
-    return (await res.json()) as T;
-  } catch {
-    return null;
-  }
-}
-
-export async function fetchTryHackMeStats(
+export async function composeTryHackMeStats(
   username: string,
   profileUrl: string,
   userId: string,
   userPublicId: string,
-  fallback: TryHackMeFallback
+  fallback: TryHackMeFallback,
+  fetchJson: FetchJson
 ): Promise<TryHackMeStats> {
   const [badgeRes, profileRes, roomsRes, badgesRes, countRes] =
     await Promise.all([
@@ -269,10 +255,7 @@ export async function fetchTryHackMeStats(
   return {
     username,
     profileUrl,
-    title:
-      profileParsed.title ||
-      badgeProfile.title ||
-      fallback.title,
+    title: profileParsed.title || badgeProfile.title || fallback.title,
     rank:
       (profileParsed.rank !== "—" ? profileParsed.rank : "") ||
       badgeProfile.rank ||
@@ -289,10 +272,94 @@ export async function fetchTryHackMeStats(
     streak,
     completedRooms,
     profileImage:
-      badgeProfile.profileImage ||
-      profileParsed.profileImage ||
-      undefined,
+      badgeProfile.profileImage || profileParsed.profileImage || undefined,
     recentRooms,
     synced,
   };
+}
+
+async function fetchJsonFromNetwork<T>(url: string): Promise<T | null> {
+  const res = await fetch(url, {
+    headers: THM_HEADERS,
+    cache: "no-store",
+  });
+
+  if (!res.ok) return null;
+
+  const contentType = res.headers.get("content-type") ?? "";
+  if (!contentType.includes("application/json")) return null;
+
+  try {
+    return (await res.json()) as T;
+  } catch {
+    return null;
+  }
+}
+
+export async function fetchTryHackMeStats(
+  username: string,
+  profileUrl: string,
+  userId: string,
+  userPublicId: string,
+  fallback: TryHackMeFallback
+): Promise<TryHackMeStats> {
+  return composeTryHackMeStats(
+    username,
+    profileUrl,
+    userId,
+    userPublicId,
+    fallback,
+    fetchJsonFromNetwork
+  );
+}
+
+export async function fetchTryHackMeStatsFromBrowser(
+  username: string,
+  profileUrl: string,
+  userId: string,
+  userPublicId: string,
+  fallback: TryHackMeFallback
+): Promise<TryHackMeStats> {
+  async function fetchJson<T>(url: string): Promise<T | null> {
+    try {
+      const res = await fetch(url, {
+        headers: THM_HEADERS,
+        cache: "no-store",
+      });
+
+      if (!res.ok) return null;
+
+      const contentType = res.headers.get("content-type") ?? "";
+      if (!contentType.includes("application/json")) return null;
+
+      return (await res.json()) as T;
+    } catch {
+      return null;
+    }
+  }
+
+  const live = await composeTryHackMeStats(
+    username,
+    profileUrl,
+    userId,
+    userPublicId,
+    fallback,
+    fetchJson
+  );
+
+  if (live.synced) return live;
+
+  try {
+    const cachedRes = await fetch("/thm-stats.json", { cache: "no-store" });
+    if (cachedRes.ok) {
+      const cached = (await cachedRes.json()) as TryHackMeStats;
+      if (cached.streak && cached.badges) {
+        return { ...cached, username, profileUrl, synced: true };
+      }
+    }
+  } catch {
+    // ignore cache read errors
+  }
+
+  return live;
 }

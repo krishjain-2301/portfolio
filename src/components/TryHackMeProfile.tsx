@@ -3,7 +3,10 @@
 import { motion } from "framer-motion";
 import { Award, ExternalLink, Flame, Shield, Trophy } from "lucide-react";
 import { useEffect, useState } from "react";
-import type { TryHackMeStats } from "@/lib/tryhackme";
+import {
+  fetchTryHackMeStatsFromBrowser,
+  type TryHackMeStats,
+} from "@/lib/tryhackme";
 import { siteConfig } from "@/lib/data";
 import { SectionHeader } from "./SectionHeader";
 
@@ -13,11 +16,14 @@ export function TryHackMeProfile() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    fetch("/api/tryhackme")
-      .then((res) => (res.ok ? res.json() : null))
-      .then((data: TryHackMeStats | null) => {
-        if (data && !("error" in data)) setStats(data);
-      })
+    fetchTryHackMeStatsFromBrowser(
+      siteConfig.tryHackMe.username,
+      siteConfig.tryHackMe.profileUrl,
+      siteConfig.tryHackMe.userId,
+      siteConfig.tryHackMe.userPublicId,
+      siteConfig.tryHackMe
+    )
+      .then(setStats)
       .catch(() => setStats(null))
       .finally(() => setLoading(false));
   }, []);
@@ -97,7 +103,7 @@ export function TryHackMeProfile() {
             ))}
           </div>
 
-          {(recentRooms.length > 0) && (
+          {recentRooms.length > 0 && (
             <>
               <div className="mb-4">
                 <h3 className="flex items-center gap-2 font-mono text-xs tracking-widest text-label uppercase">
