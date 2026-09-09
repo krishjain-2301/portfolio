@@ -7,28 +7,7 @@
   "badges": 5,
   "streak": 11,
   "completedRooms": 42,
-  "recentRooms": [
-    {
-      "name": "DNS in Detail",
-      "difficulty": "Easy",
-      "description": "How DNS works and how it helps access internet services."
-    },
-    {
-      "name": "Offensive Security Intro",
-      "difficulty": "Easy",
-      "description": "Hack your first website in a safe, contained environment."
-    },
-    {
-      "name": "TakeOver",
-      "difficulty": "Easy",
-      "description": "Subdomain enumeration and takeover challenges."
-    },
-    {
-      "name": "Defensive Security Intro",
-      "difficulty": "Easy",
-      "description": "Threat intel, SOC, DFIR, malware analysis, and SIEM."
-    }
-  ],
-  "synced": true,
-  "updatedAt": "2026-09-08T00:00:00.000Z"
+  "recentRooms": [],
+  "synced": false,
+  "updatedAt": "2026-09-09T02:28:23.955Z"
 }
