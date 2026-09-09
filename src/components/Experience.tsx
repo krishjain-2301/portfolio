@@ -10,7 +10,7 @@ export function Experience() {
     <section id="experience" className="relative px-6 py-24">
       <div className="mx-auto max-w-6xl">
         <SectionHeader
-          number="06."
+          number="05."
           title="Experience"
           subtitle="Professional roles and internships."
         />

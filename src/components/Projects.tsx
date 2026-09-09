@@ -10,7 +10,7 @@ export function Projects() {
     <section id="projects" className="relative px-6 py-24">
       <div className="mx-auto max-w-6xl">
         <SectionHeader
-          number="05."
+          number="04."
           title="Featured Projects"
           subtitle="Tools and platforms I've built in AI security and cybersecurity."
         />

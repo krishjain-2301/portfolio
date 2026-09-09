@@ -96,40 +96,6 @@ export const siteConfig = {
       items: ["Python", "C++", "Java", "JavaScript", "SQL", "Bash"],
     },
   ],
-  tryHackMe: {
-    username: "krishvain",
-    userId: "67110b9a01dd61c9da804d6c",
-    userPublicId: "5672619",
-    profileUrl: "https://tryhackme.com/p/krishvain",
-    title: "[0x8][HACKER]",
-    rank: "Top 15%",
-    level: "43",
-    badges: 5,
-    streak: 11,
-    completedRooms: 42,
-    recentRooms: [
-      {
-        name: "DNS in Detail",
-        difficulty: "Easy",
-        description: "How DNS works and how it helps access internet services.",
-      },
-      {
-        name: "Offensive Security Intro",
-        difficulty: "Easy",
-        description: "Hack your first website in a safe, contained environment.",
-      },
-      {
-        name: "TakeOver",
-        difficulty: "Easy",
-        description: "Subdomain enumeration and takeover challenges.",
-      },
-      {
-        name: "Defensive Security Intro",
-        difficulty: "Easy",
-        description: "Threat intel, SOC, DFIR, malware analysis, and SIEM.",
-      },
-    ],
-  },
   projects: [
     {
       title: "AYZO",

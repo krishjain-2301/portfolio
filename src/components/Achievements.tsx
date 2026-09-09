@@ -10,7 +10,7 @@ export function Achievements() {
     <section className="relative px-6 py-24">
       <div className="mx-auto max-w-6xl">
         <SectionHeader
-          number="07."
+          number="06."
           title="Achievements & Certifications"
           subtitle="Competitions, CTF wins, and professional credentials."
         />

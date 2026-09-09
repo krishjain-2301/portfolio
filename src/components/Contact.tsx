@@ -38,7 +38,7 @@ export function Contact() {
     <section id="contact" className="relative px-6 py-24">
       <div className="mx-auto max-w-6xl">
         <SectionHeader
-          number="08."
+          number="07."
           title="Get In Touch"
           subtitle="Open to AI Red Teaming roles, security research, and collaboration."
         />
